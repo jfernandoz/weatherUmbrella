@@ -31,8 +31,6 @@ class WeatherViewController: UIViewController {
         loadAPI()
     }
     
-
-    
     func loadAPI() {
         WebService().load(Location.get(zipCode: getZip())) { result in
             guard let location = result?[0] else { return }
@@ -72,6 +70,7 @@ class WeatherViewController: UIViewController {
     }
     
     func populateDays() {
+        days = []
         var date: Date?
         let df = DateFormatter()
         df.dateFormat = "EEEE"
