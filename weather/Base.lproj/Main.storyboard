@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Settings-->
+        <!--Settings View Controller-->
         <scene sceneID="Rju-2H-ZwC">
             <objects>
-                <viewController id="WCh-Ka-J7e" sceneMemberID="viewController">
+                <viewController id="WCh-Ka-J7e" customClass="SettingsViewController" customModule="weather" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uPh-Rd-F6H"/>
                         <viewControllerLayoutGuide type="bottom" id="Szy-0R-WCP"/>
@@ -21,13 +21,37 @@
                     <view key="view" contentMode="scaleToFill" id="NYH-EA-D5I">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Zip Code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="anb-q5-xhc">
+                                <rect key="frame" x="111.5" y="51" width="179.5" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Zip Code:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xL-ov-F6i">
+                                <rect key="frame" x="29" y="56" width="74.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2xL-ov-F6i" firstAttribute="leading" secondItem="NYH-EA-D5I" secondAttribute="leadingMargin" constant="13" id="0LA-pg-9mF"/>
+                            <constraint firstItem="anb-q5-xhc" firstAttribute="leading" secondItem="2xL-ov-F6i" secondAttribute="trailing" constant="8" id="5es-Qh-TjZ"/>
+                            <constraint firstItem="2xL-ov-F6i" firstAttribute="top" secondItem="uPh-Rd-F6H" secondAttribute="bottom" constant="36" id="7Zq-OV-WgB"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="anb-q5-xhc" secondAttribute="trailing" constant="13" id="JPU-ef-PJX"/>
+                            <constraint firstItem="anb-q5-xhc" firstAttribute="top" secondItem="uPh-Rd-F6H" secondAttribute="bottom" constant="31" id="Y2F-mB-tml"/>
+                        </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Settings" id="FDy-cW-Cek"/>
+                    <tabBarItem key="tabBarItem" systemItem="more" id="FDy-cW-Cek"/>
+                    <connections>
+                        <outlet property="zipFld" destination="anb-q5-xhc" id="YDs-yb-O3m"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Kw-C0-i8h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="559" y="350"/>
+            <point key="canvasLocation" x="558.75" y="349.64788732394368"/>
         </scene>
         <!--Weather-->
         <scene sceneID="6W2-sL-xBr">
@@ -51,10 +75,10 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XXº " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sE7-Ns-8Lx">
-                                        <rect key="frame" x="137.5" y="80" width="60" height="60"/>
+                                        <rect key="frame" x="117.5" y="70" width="100" height="80"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="60" id="VXT-0o-23o"/>
-                                            <constraint firstAttribute="height" constant="60" id="gNy-eX-kDK"/>
+                                            <constraint firstAttribute="width" constant="100" id="VXT-0o-23o"/>
+                                            <constraint firstAttribute="height" constant="80" id="gNy-eX-kDK"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -78,9 +102,10 @@
                                     <constraint firstItem="sE7-Ns-8Lx" firstAttribute="centerX" secondItem="cPb-U4-qCa" secondAttribute="centerX" constant="7.5" id="zK1-58-gJr"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="I8W-jh-TwR">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="I8W-jh-TwR">
                                 <rect key="frame" x="0.0" y="221" width="320" height="298"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <sections/>
                                 <connections>
                                     <outlet property="dataSource" destination="rkh-YK-UEi" id="XGm-nb-WYf"/>
                                     <outlet property="delegate" destination="rkh-YK-UEi" id="a5z-qN-iUE"/>
@@ -98,11 +123,12 @@
                             <constraint firstItem="I8W-jh-TwR" firstAttribute="leading" secondItem="fHN-ez-6vb" secondAttribute="leadingMargin" constant="-16" id="w0P-WM-lkR"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Weather" id="jFB-9g-b9V"/>
+                    <tabBarItem key="tabBarItem" title="Weather" selectedImage="icons8-Rainy Weather-25" id="jFB-9g-b9V"/>
                     <connections>
                         <outlet property="cityLbl" destination="4Ul-vd-A4X" id="tUm-zE-NH7"/>
                         <outlet property="contentView" destination="cPb-U4-qCa" id="wE8-28-kc4"/>
                         <outlet property="statusLbl" destination="e8o-Yr-5jf" id="vRF-66-cnj"/>
+                        <outlet property="tableView" destination="I8W-jh-TwR" id="X2j-f5-6ky"/>
                         <outlet property="tempLbl" destination="sE7-Ns-8Lx" id="DfD-DI-o8W"/>
                     </connections>
                 </viewController>
@@ -129,4 +155,7 @@
             <point key="canvasLocation" x="-394" y="23"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icons8-Rainy Weather-25" width="25" height="25"/>
+    </resources>
 </document>

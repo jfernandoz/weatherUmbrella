@@ -14,32 +14,40 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var statusLbl: UILabel!
     @IBOutlet weak var tempLbl: UILabel!
     @IBOutlet weak var cityLbl: UILabel!
+    @IBOutlet weak var tableView: UITableView!
     var dailyWeather: DailyWeather!
     var hourlyWeather: [HourlyWeather]!
     var location: Location!
-    var days = ["Today", "Tomorrow"]
+    var days = [String]()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let dayAfterTomorrow = Calendar.current.date(byAdding: Calendar.Component.day, value: 2, to: Date())
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        let dayOfWeekString = dateFormatter.string(from: dayAfterTomorrow!)
-        days.append(dayOfWeekString)
+        let nib = UINib(nibName: "DailyWeatherCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "DailyWeatherCell")
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         loadAPI()
     }
     
+
+    
     func loadAPI() {
-        WebService().load(Location.get(zipCode: "30030")) { result in
+        WebService().load(Location.get(zipCode: getZip())) { result in
             guard let location = result?[0] else { return }
             self.location = location
             self.loadDailyWeather()
+            self.populateDays()
             self.loadHourlyWeather()
         }
+    }
+    
+    func getZip() -> String{
+        guard let zip = UserDefaults.standard.string(forKey: "Zip") else {
+            return Settings.defaultZip
+        }
+        return zip
     }
     
     func loadDailyWeather() {
@@ -53,23 +61,31 @@ class WeatherViewController: UIViewController {
     }
     
     func updateDailyView() {
-        tempLbl.text = dailyWeather.celsiusH
+        tempLbl.text = Settings.convert(temp: Double(dailyWeather.celsiusH)!)
         statusLbl.text = dailyWeather.conditions
         cityLbl.text = location.city
-        
-        if Int(dailyWeather.celsiusH)! > 20 {
+        if Int(dailyWeather.celsiusH)! > Settings.colorChangeCelsius {
             contentView.backgroundColor = UIColor(colorLiteralRed: 243/255, green: 151/255, blue: 49/255, alpha: 1)
         } else {
             contentView.backgroundColor = UIColor(colorLiteralRed: 57/255, green: 169/255, blue: 244/255, alpha: 1)
         }
-        
+    }
+    
+    func populateDays() {
+        var date: Date?
+        let df = DateFormatter()
+        df.dateFormat = "EEEE"
+        for i in 0...2 {
+            date = Calendar.current.date(byAdding: Calendar.Component.day, value: i, to: Date())
+            let dayOfWeekString = df.string(from: date!)
+            days.append(dayOfWeekString)
+        }
     }
     
     func loadHourlyWeather() {
         WebService().load(HourlyWeather.get(shortState: location.shortState, city: location.city.replacingOccurrences(of: " ", with: "_"))){ result in
             guard let hourlyWeather = result else { return }
             self.hourlyWeather = hourlyWeather
-            print(hourlyWeather)
             DispatchQueue.main.async {
                 self.updateHourlyView()
             }
@@ -77,29 +93,20 @@ class WeatherViewController: UIViewController {
     }
     
     func updateHourlyView() {
-        
+        tableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
 extension WeatherViewController: UITableViewDelegate {
-    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120.0
+    }
+
 }
 
 extension WeatherViewController: UITableViewDataSource {
@@ -117,6 +124,10 @@ extension WeatherViewController: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DailyWeatherCell") as? DailyWeatherCell
+        cell?.hourlyDataSet = hourlyWeather.filter{$0.weekday.contains(days[indexPath.section])}
+        return cell!
     }
 }
+
+
